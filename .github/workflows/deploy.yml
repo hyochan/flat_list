@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  release:
+    types: [prereleased]
+
+jobs:
+  build_and_deploy_web:
+    name: Build Flutter (Web)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'beta'
+          architecture: x64
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Enable web
+        run: flutter config --enable-web
+
+      - name: Build web
+        run: flutter build web --release
