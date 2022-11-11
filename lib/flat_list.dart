@@ -13,6 +13,9 @@ class FlatList<T> extends StatefulWidget {
   final Widget? listFooterWidget;
   final Widget? listEmptyWidget;
   final int numColumns;
+  final double onEndReachedDelta;
+  final VoidCallback? onEndReached;
+  final Function(double, double)? onScroll;
 
   const FlatList({
     super.key,
@@ -22,14 +25,41 @@ class FlatList<T> extends StatefulWidget {
     this.listFooterWidget,
     this.listEmptyWidget,
     this.numColumns = 1,
+    this.onEndReachedDelta = 200,
+    this.onEndReached,
+    this.onScroll,
   });
 
   @override
-  State<FlatList> createState() => _FlatListState();
+  State<FlatList> createState() => _FlatListState<T>();
 }
 
-class _FlatListState extends State<FlatList> {
+class _FlatListState<T> extends State<FlatList> {
   var height = 0.0;
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    double maxScroll = _scrollController.position.maxScrollExtent;
+    double currentScroll = _scrollController.position.pixels;
+    double delta = widget.onEndReachedDelta;
+    if (maxScroll - currentScroll <= delta) {
+      widget.onEndReached?.call();
+    }
+
+    widget.onScroll?.call(maxScroll, currentScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +84,7 @@ class _FlatListState extends State<FlatList> {
       }
 
       return CustomScrollView(
+        controller: _scrollController,
         slivers: <Widget>[
           widget.listHeaderWidget != null
               ? SliverToBoxAdapter(child: widget.listHeaderWidget!)
@@ -82,6 +113,7 @@ class _FlatListState extends State<FlatList> {
     }
 
     return ListView.builder(
+      controller: _scrollController,
       itemCount: widget.data.length,
       itemBuilder: (context, index) {
         var item = widget.data[index];

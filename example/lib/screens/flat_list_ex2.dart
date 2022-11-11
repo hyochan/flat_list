@@ -16,6 +16,9 @@ class FlatListEx2 extends HookWidget {
       ),
       body: SafeArea(
         child: FlatList(
+          onEndReached: () {
+            print('onEndReached');
+          },
           numColumns: 2,
           listHeaderWidget: const Header(),
           listFooterWidget: const Footer(),
