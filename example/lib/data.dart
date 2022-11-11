@@ -15,4 +15,8 @@ class Person {
         super();
 }
 
-var data = List.generate(30, (index) => Person());
+var data = List.generate(10, (index) => Person());
+
+var getMoreData = () {
+  return List.generate(10, (index) => Person());
+};

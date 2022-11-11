@@ -10,6 +10,8 @@ class FlatListEx1 extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    var items = useState(data);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Simple Example'),
@@ -17,7 +19,7 @@ class FlatListEx1 extends HookWidget {
       body: SafeArea(
         child: FlatList(
           onEndReached: () {
-            print('onEndReached');
+            items.value += getMoreData();
           },
           listHeaderWidget: const Header(),
           listFooterWidget: const Footer(),
@@ -26,9 +28,9 @@ class FlatListEx1 extends HookWidget {
             padding: const EdgeInsets.all(12),
             child: const Text('List is empty!'),
           ),
-          data: data,
+          data: items.value,
           buildItem: (item, index) {
-            var person = data[index];
+            var person = items.value[index];
 
             return ListItemView(person: person);
           },

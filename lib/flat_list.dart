@@ -17,6 +17,11 @@ class FlatList<T> extends StatefulWidget {
   final VoidCallback? onEndReached;
   final Function(double, double)? onScroll;
 
+  /// Below props for grid view
+  final double childAspectRatio;
+  final double mainAxisSpacing;
+  final double crossAxisSpacing;
+
   const FlatList({
     super.key,
     required this.data,
@@ -28,6 +33,9 @@ class FlatList<T> extends StatefulWidget {
     this.onEndReachedDelta = 200,
     this.onEndReached,
     this.onScroll,
+    this.childAspectRatio = 1,
+    this.mainAxisSpacing = 10,
+    this.crossAxisSpacing = 10,
   });
 
   @override
@@ -35,7 +43,8 @@ class FlatList<T> extends StatefulWidget {
 }
 
 class _FlatListState<T> extends State<FlatList> {
-  var height = 0.0;
+  var _height = 0.0;
+  var _currentSize = 0;
   final _scrollController = ScrollController();
 
   @override
@@ -48,8 +57,16 @@ class _FlatListState<T> extends State<FlatList> {
     double maxScroll = _scrollController.position.maxScrollExtent;
     double currentScroll = _scrollController.position.pixels;
     double delta = widget.onEndReachedDelta;
-    if (maxScroll - currentScroll <= delta) {
+    if (maxScroll - currentScroll <= delta &&
+        _currentSize < widget.data.length) {
+      setState(() => _currentSize = widget.data.length);
       widget.onEndReached?.call();
+    }
+
+    if (_scrollController.position.atEdge) {
+      if (_scrollController.position.pixels != 0) {
+        widget.onEndReached?.call();
+      }
     }
 
     widget.onScroll?.call(maxScroll, currentScroll);
@@ -74,10 +91,10 @@ class _FlatListState<T> extends State<FlatList> {
     }
 
     if (widget.numColumns > 1) {
-      if (height == 0.0) {
+      if (_height == 0.0) {
         return MeasureSize(
           onChange: (size) {
-            setState(() => height = size.height + 20);
+            setState(() => _height = size.height + 20);
           },
           child: widget.buildItem(widget.data[0], 0),
         );
@@ -92,10 +109,10 @@ class _FlatListState<T> extends State<FlatList> {
           SliverGrid(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: widget.numColumns,
-              mainAxisExtent: height,
-              childAspectRatio: 1,
-              mainAxisSpacing: 10.0,
-              crossAxisSpacing: 10.0,
+              mainAxisExtent: _height,
+              childAspectRatio: widget.childAspectRatio,
+              mainAxisSpacing: widget.mainAxisSpacing,
+              crossAxisSpacing: widget.crossAxisSpacing,
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) {
