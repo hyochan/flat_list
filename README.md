@@ -55,19 +55,19 @@ FlatList(
 
 More about the differences in `props` compared to React Native's FlatList are listed below.
 
-| Flutter                | React Native                |
-|------------------------|:---------------------------:|
-| `listHeaderWidget`     | `ListHeaderComponent`       |
-| `listFooterWidget`     | `ListFooterComponent`       |
-| `listEmptyWidget`      | ``                          |
-| `data`                 | `data`                      |
-| `buildItem`            | `renderItem`                |
-| `onRefresh`            | `onRefresh`                 |
-| `onEndReached`         | `onEndReached`              |
-| ``                     | `refreshing`                |
-| `loading`              | `loading`                   |
-| `numColumns`           | `numColumns`                |
-| `onEndReachedDelta`    | `onEndReachedThreshold`     |
+| Flutter                | React Native                | Required |
+|------------------------|:---------------------------:|:--------:|
+| `data`                 | `data`                      |    ✓     |
+| `buildItem`            | `renderItem`                |    ✓     |
+| `listHeaderWidget`     | `ListHeaderComponent`       |          |
+| `listFooterWidget`     | `ListFooterComponent`       |          |
+| `listEmptyWidget`      | `ListEmptyComponent`        |          |
+| `onRefresh`            | `onRefresh`                 |          |
+| `onEndReached`         | `onEndReached`              |          |
+| ``                     | `refreshing`                |          |
+| `loading`              | `loading`                   |          |
+| `numColumns`           | `numColumns`                |          |
+| `onEndReachedDelta`    | `onEndReachedThreshold`     |          |
 
 
 ## Demo
