@@ -2,7 +2,6 @@ library flat_list;
 
 import 'package:flat_list/utils/measure_size.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 typedef ItemBuilder<T> = Widget Function(T item, int index);
 
@@ -12,6 +11,8 @@ class FlatList<T> extends StatefulWidget {
   final Widget? listHeaderWidget;
   final Widget? listFooterWidget;
   final Widget? listEmptyWidget;
+  final Widget? listLoadingWidget;
+  final bool loading;
   final int numColumns;
   final double onEndReachedDelta;
   final VoidCallback? onEndReached;
@@ -29,6 +30,8 @@ class FlatList<T> extends StatefulWidget {
     this.listHeaderWidget,
     this.listFooterWidget,
     this.listEmptyWidget,
+    this.listLoadingWidget,
+    this.loading = false,
     this.numColumns = 1,
     this.onEndReachedDelta = 200,
     this.onEndReached,
@@ -41,6 +44,13 @@ class FlatList<T> extends StatefulWidget {
   @override
   State<FlatList> createState() => _FlatListState<T>();
 }
+
+var defaultLoadingWidget = Container(
+  padding: const EdgeInsets.all(20),
+  child: const Center(
+    child: CircularProgressIndicator(),
+  ),
+);
 
 class _FlatListState<T> extends State<FlatList> {
   var _height = 0.0;
@@ -90,6 +100,7 @@ class _FlatListState<T> extends State<FlatList> {
       );
     }
 
+    /// Render [GridView]
     if (widget.numColumns > 1) {
       if (_height == 0.0) {
         return MeasureSize(
@@ -122,6 +133,10 @@ class _FlatListState<T> extends State<FlatList> {
               childCount: widget.data.length,
             ),
           ),
+          widget.loading
+              ? SliverToBoxAdapter(
+                  child: widget.listLoadingWidget ?? defaultLoadingWidget)
+              : const SliverToBoxAdapter(child: SizedBox()),
           widget.listFooterWidget != null
               ? SliverToBoxAdapter(child: widget.listFooterWidget!)
               : const SliverToBoxAdapter(child: SizedBox()),
@@ -129,6 +144,7 @@ class _FlatListState<T> extends State<FlatList> {
       );
     }
 
+    /// Render [ListView]
     return ListView.builder(
       controller: _scrollController,
       itemCount: widget.data.length,
@@ -148,6 +164,9 @@ class _FlatListState<T> extends State<FlatList> {
           return Column(
             children: [
               widget.buildItem(item, index),
+              widget.loading
+                  ? widget.listLoadingWidget ?? defaultLoadingWidget
+                  : const SizedBox(),
               widget.listFooterWidget ?? const SizedBox(),
             ],
           );

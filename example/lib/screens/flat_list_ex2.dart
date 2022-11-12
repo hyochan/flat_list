@@ -11,6 +11,7 @@ class FlatListEx2 extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var items = useState(data);
+    var loading = useState(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -18,8 +19,14 @@ class FlatListEx2 extends HookWidget {
       ),
       body: SafeArea(
         child: FlatList(
-          onEndReached: () {
-            items.value += getMoreData();
+          loading: loading.value,
+          onEndReached: () async {
+            loading.value = true;
+            await Future.delayed(const Duration(seconds: 2));
+            if (context.mounted) {
+              items.value += getMoreData();
+              loading.value = false;
+            }
           },
           numColumns: 2,
           listHeaderWidget: const Header(),
