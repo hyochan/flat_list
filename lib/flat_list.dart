@@ -1,7 +1,8 @@
 library flat_list;
 
-import 'package:flat_list/utils/measure_size.dart';
 import 'package:flutter/material.dart';
+import 'package:flat_list/utils/measure_size.dart' show MeasureSize;
+import 'package:flutter/foundation.dart' show kReleaseMode;
 
 typedef ItemBuilder<T> = Widget Function(T item, int index);
 
@@ -13,11 +14,14 @@ class FlatList<T> extends StatefulWidget {
   final Widget? listFooterWidget;
   final Widget? listEmptyWidget;
   final Widget? listLoadingWidget;
+  final Widget? itemSeparatorWidget;
   final bool loading;
-  final int numColumns;
   final double onEndReachedDelta;
   final VoidCallback? onEndReached;
   final Function(double, double)? onScroll;
+
+  /// Only works when [horizontal] is true.
+  final int numColumns;
   final bool horizontal;
 
   /// RefreshControl props
@@ -41,6 +45,7 @@ class FlatList<T> extends StatefulWidget {
     this.listFooterWidget,
     this.listEmptyWidget,
     this.listLoadingWidget,
+    this.itemSeparatorWidget,
     this.loading = false,
     this.numColumns = 1,
     this.onEndReachedDelta = 200,
@@ -125,8 +130,16 @@ class _FlatListState<T> extends State<FlatList> {
 
     /// Render [GridView]
     if (widget.numColumns > 1) {
-      if (widget.horizontal) {
-        throw Exception('[numColumns] is not supported with horizontal list.');
+      if (!kReleaseMode) {
+        if (widget.horizontal) {
+          throw Exception(
+              '[numColumns] is not supported with horizontal list.');
+        }
+
+        if (widget.itemSeparatorWidget != null) {
+          throw Exception(
+              '[itemSeparatorWidget] only works with horizontal list.');
+        }
       }
 
       if (_height == 0.0) {
@@ -193,6 +206,7 @@ class _FlatListState<T> extends State<FlatList> {
                     children: [
                       widget.listHeaderWidget ?? const SizedBox(),
                       widget.buildItem(item, index),
+                      widget.itemSeparatorWidget ?? const SizedBox(),
                     ],
                   );
                 }
@@ -201,6 +215,7 @@ class _FlatListState<T> extends State<FlatList> {
                   return Column(
                     children: [
                       widget.buildItem(item, index),
+                      widget.itemSeparatorWidget ?? const SizedBox(),
                       widget.listFooterWidget ?? const SizedBox(),
                       widget.loading
                           ? widget.listLoadingWidget ?? defaultLoadingWidget
@@ -210,7 +225,10 @@ class _FlatListState<T> extends State<FlatList> {
                 }
               }
 
-              return widget.buildItem(item, widget.data.indexOf(item));
+              return Column(children: [
+                widget.buildItem(item, widget.data.indexOf(item)),
+                widget.itemSeparatorWidget ?? const SizedBox(),
+              ]);
             },
             childCount: widget.data.length,
           ),

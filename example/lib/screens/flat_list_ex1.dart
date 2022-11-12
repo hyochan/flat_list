@@ -42,6 +42,8 @@ class FlatListEx1 extends HookWidget {
             padding: const EdgeInsets.all(12),
             child: const Text('List is empty!'),
           ),
+          itemSeparatorWidget:
+              const Divider(color: Colors.blueAccent, height: 1),
           data: items.value,
           buildItem: (item, index) {
             var person = items.value[index];
