@@ -1,6 +1,6 @@
 name: flat_list
 description: FlatList widget for Flutter which has similar spec as in React Native's FlatList.
-version: 0.1.1
+version: 0.1.2
 repository: https://github.com/hyochan/flat_list
 
 environment:

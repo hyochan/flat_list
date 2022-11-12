@@ -101,7 +101,7 @@ listEmptyWidget: Container(
 ```
 
 
-## Refresh indicator
+### Refresh indicator
 Providing `onRefresh` will add [RefreshIndicator]. Therefore you can refresh the data.
 
 ```dart
@@ -114,7 +114,7 @@ onRefresh: () async {
 },
 ```
 
-## Infinite scroll
+### Infinite scroll
 Infinite scrolling is possible using `onEndReached`. You should also provide `loading` to use this feature correctly.
 
 ```dart
