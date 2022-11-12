@@ -28,6 +28,13 @@ class FlatListEx2 extends HookWidget {
               loading.value = false;
             }
           },
+          onRefresh: () async {
+            await Future.delayed(const Duration(seconds: 2));
+
+            if (context.mounted) {
+              items.value = data;
+            }
+          },
           numColumns: 2,
           listHeaderWidget: const Header(),
           listFooterWidget: const Footer(),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 typedef ItemBuilder<T> = Widget Function(T item, int index);
 
 class FlatList<T> extends StatefulWidget {
+  final Key? scrollViewKey;
   final List<T> data;
   final ItemBuilder<T> buildItem;
   final Widget? listHeaderWidget;
@@ -18,13 +19,21 @@ class FlatList<T> extends StatefulWidget {
   final VoidCallback? onEndReached;
   final Function(double, double)? onScroll;
 
+  /// RefreshControl props
+  final Key? refreshIndicatorKey;
+  final RefreshCallback? onRefresh;
+  final Color? refreshIndicatorColor;
+  final double refreshIndicatorStrokeWidth;
+
   /// Below props for grid view
+  final Key? gridViewKey;
   final double childAspectRatio;
   final double mainAxisSpacing;
   final double crossAxisSpacing;
 
   const FlatList({
     super.key,
+    this.scrollViewKey,
     required this.data,
     required this.buildItem,
     this.listHeaderWidget,
@@ -36,6 +45,11 @@ class FlatList<T> extends StatefulWidget {
     this.onEndReachedDelta = 200,
     this.onEndReached,
     this.onScroll,
+    this.refreshIndicatorKey,
+    this.onRefresh,
+    this.refreshIndicatorColor,
+    this.refreshIndicatorStrokeWidth = 2.0,
+    this.gridViewKey,
     this.childAspectRatio = 1,
     this.mainAxisSpacing = 10,
     this.crossAxisSpacing = 10,
@@ -88,10 +102,10 @@ class _FlatListState<T> extends State<FlatList> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildList(BuildContext context) {
     if (widget.data.isEmpty) {
       return ListView(
+        key: widget.scrollViewKey,
         children: [
           widget.listHeaderWidget ?? const SizedBox(),
           widget.listEmptyWidget ?? const SizedBox(),
@@ -112,12 +126,15 @@ class _FlatListState<T> extends State<FlatList> {
       }
 
       return CustomScrollView(
+        key: widget.scrollViewKey,
         controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
         slivers: <Widget>[
           widget.listHeaderWidget != null
               ? SliverToBoxAdapter(child: widget.listHeaderWidget!)
               : const SliverToBoxAdapter(child: SizedBox()),
           SliverGrid(
+            key: widget.gridViewKey,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: widget.numColumns,
               mainAxisExtent: _height,
@@ -145,35 +162,57 @@ class _FlatListState<T> extends State<FlatList> {
     }
 
     /// Render [ListView]
-    return ListView.builder(
+    return CustomScrollView(
+      key: widget.scrollViewKey,
+      physics: const BouncingScrollPhysics(),
       controller: _scrollController,
-      itemCount: widget.data.length,
-      itemBuilder: (context, index) {
-        var item = widget.data[index];
+      slivers: [
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              var item = widget.data[index];
 
-        if (index == 0) {
-          return Column(
-            children: [
-              widget.listHeaderWidget ?? const SizedBox(),
-              widget.buildItem(item, index),
-            ],
-          );
-        }
+              if (index == 0) {
+                return Column(
+                  children: [
+                    widget.listHeaderWidget ?? const SizedBox(),
+                    widget.buildItem(item, index),
+                  ],
+                );
+              }
 
-        if (index == widget.data.length - 1) {
-          return Column(
-            children: [
-              widget.buildItem(item, index),
-              widget.loading
-                  ? widget.listLoadingWidget ?? defaultLoadingWidget
-                  : const SizedBox(),
-              widget.listFooterWidget ?? const SizedBox(),
-            ],
-          );
-        }
+              if (index == widget.data.length - 1) {
+                return Column(
+                  children: [
+                    widget.buildItem(item, index),
+                    widget.loading
+                        ? widget.listLoadingWidget ?? defaultLoadingWidget
+                        : const SizedBox(),
+                    widget.listFooterWidget ?? const SizedBox(),
+                  ],
+                );
+              }
 
-        return widget.buildItem(item, index);
-      },
+              return widget.buildItem(item, widget.data.indexOf(item));
+            },
+            childCount: widget.data.length,
+          ),
+        )
+      ],
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.onRefresh != null) {
+      return RefreshIndicator(
+        onRefresh: widget.onRefresh!,
+        color: widget.refreshIndicatorColor,
+        strokeWidth: widget.refreshIndicatorStrokeWidth,
+        key: widget.refreshIndicatorKey,
+        child: _buildList(context),
+      );
+    }
+    return _buildList(context);
   }
 }
