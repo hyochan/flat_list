@@ -77,6 +77,12 @@ class _FlatListState<T> extends State<FlatList> {
     _scrollController.addListener(_onScroll);
   }
 
+  void _onEndReachedCallback() {
+    if (!widget.loading) {
+      widget.onEndReached?.call();
+    }
+  }
+
   void _onScroll() {
     double maxScroll = _scrollController.position.maxScrollExtent;
     double currentScroll = _scrollController.position.pixels;
@@ -84,12 +90,12 @@ class _FlatListState<T> extends State<FlatList> {
     if (maxScroll - currentScroll <= delta &&
         _currentSize < widget.data.length) {
       setState(() => _currentSize = widget.data.length);
-      widget.onEndReached?.call();
+      _onEndReachedCallback();
     }
 
     if (_scrollController.position.atEdge) {
       if (_scrollController.position.pixels != 0) {
-        widget.onEndReached?.call();
+        _onEndReachedCallback();
       }
     }
 

@@ -1,3 +1,6 @@
+## 0.1.1
+* enh: prevent `onEndReached` from firing when `loading` is true.
+
 ## 0.1.0
 
 * Early Preview
