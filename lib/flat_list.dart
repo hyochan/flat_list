@@ -150,12 +150,12 @@ class _FlatListState<T> extends State<FlatList> {
               childCount: widget.data.length,
             ),
           ),
+          widget.listFooterWidget != null
+              ? SliverToBoxAdapter(child: widget.listFooterWidget!)
+              : const SliverToBoxAdapter(child: SizedBox()),
           widget.loading
               ? SliverToBoxAdapter(
                   child: widget.listLoadingWidget ?? defaultLoadingWidget)
-              : const SliverToBoxAdapter(child: SizedBox()),
-          widget.listFooterWidget != null
-              ? SliverToBoxAdapter(child: widget.listFooterWidget!)
               : const SliverToBoxAdapter(child: SizedBox()),
         ],
       );
@@ -185,10 +185,10 @@ class _FlatListState<T> extends State<FlatList> {
                 return Column(
                   children: [
                     widget.buildItem(item, index),
+                    widget.listFooterWidget ?? const SizedBox(),
                     widget.loading
                         ? widget.listLoadingWidget ?? defaultLoadingWidget
                         : const SizedBox(),
-                    widget.listFooterWidget ?? const SizedBox(),
                   ],
                 );
               }
