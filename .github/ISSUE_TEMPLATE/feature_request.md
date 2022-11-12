@@ -1,8 +1,8 @@
 ---
-name: 🐛 Bug Report
-about: Report an issue to help us Flutter's `flat_list`
+name: 🥹 Feature Request
+about: Ask for the feature request! If you need a discussion, please use [discussions board](https://github.com/hyochan/flat_list/discussions) instead.
 title: ''
-labels: '🐛 bug'
+labels: '🥹 feature request'
 ---
 
 **Description**

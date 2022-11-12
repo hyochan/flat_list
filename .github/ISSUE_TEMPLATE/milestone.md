@@ -1,8 +1,8 @@
 ---
-name: 🐛 Bug Report
-about: Report an issue to help us Flutter's `flat_list`
+name: 🏃🏿 Milestone
+about: Issue that should be worked on. If you need a discussion beforehand, please use [discussions board](https://github.com/hyochan/flat_list/discussions) instead.
 title: ''
-labels: '🐛 bug'
+labels: '🏃🏿 milestone'
 ---
 
 **Description**
