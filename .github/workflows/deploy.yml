@@ -2,24 +2,18 @@ name: Deploy
 
 on:
   release:
-    types: [prereleased]
+    types: [created]
+
 
 jobs:
-  build_and_deploy_web:
-    name: Build Flutter (Web)
+  build:
+    # if: ${{ github.repository == 'hyochan/flat_list' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+
+      - uses: k-paxian/dart-package-publisher@master
         with:
-          channel: 'beta'
-          architecture: x64
-
-      - name: Pub get
-        run: flutter pub get
-
-      - name: Enable web
-        run: flutter config --enable-web
-
-      - name: Build web
-        run: flutter build web --release
+          credentialJson: ${{ secrets.CREDENTIAL_JSON }}
+          flutter: true
+          skipTests: true
