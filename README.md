@@ -151,7 +151,7 @@ Examples are provided in `/example` folder.
 
 ## TODO
 
-- [ ] Support optional `horizontal` mode
+- [x] Support optional `horizontal` mode
 - [ ] Separator support in `ListView`
 - [ ] ScrollToIndex support
 - [ ] [Initial number to render](https://reactnative.dev/docs/flatlist#initialnumtorender)
