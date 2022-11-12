@@ -2,6 +2,7 @@ library flat_list;
 
 import 'package:flat_list/utils/measure_size.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 typedef ItemBuilder<T> = Widget Function(T item, int index);
 
@@ -18,6 +19,7 @@ class FlatList<T> extends StatefulWidget {
   final double onEndReachedDelta;
   final VoidCallback? onEndReached;
   final Function(double, double)? onScroll;
+  final bool horizontal;
 
   /// RefreshControl props
   final Key? refreshIndicatorKey;
@@ -53,6 +55,7 @@ class FlatList<T> extends StatefulWidget {
     this.childAspectRatio = 1,
     this.mainAxisSpacing = 10,
     this.crossAxisSpacing = 10,
+    this.horizontal = false,
   });
 
   @override
@@ -111,6 +114,7 @@ class _FlatListState<T> extends State<FlatList> {
   Widget _buildList(BuildContext context) {
     if (widget.data.isEmpty) {
       return ListView(
+        scrollDirection: widget.horizontal ? Axis.horizontal : Axis.vertical,
         key: widget.scrollViewKey,
         children: [
           widget.listHeaderWidget ?? const SizedBox(),
@@ -122,6 +126,10 @@ class _FlatListState<T> extends State<FlatList> {
 
     /// Render [GridView]
     if (widget.numColumns > 1) {
+      if (widget.horizontal) {
+        throw Exception('[numColumns] is not supported with horizontal list.');
+      }
+
       if (_height == 0.0) {
         return MeasureSize(
           onChange: (size) {
@@ -170,6 +178,7 @@ class _FlatListState<T> extends State<FlatList> {
     /// Render [ListView]
     return CustomScrollView(
       key: widget.scrollViewKey,
+      scrollDirection: widget.horizontal ? Axis.horizontal : Axis.vertical,
       physics: const BouncingScrollPhysics(),
       controller: _scrollController,
       slivers: [
@@ -178,25 +187,28 @@ class _FlatListState<T> extends State<FlatList> {
             (context, index) {
               var item = widget.data[index];
 
-              if (index == 0) {
-                return Column(
-                  children: [
-                    widget.listHeaderWidget ?? const SizedBox(),
-                    widget.buildItem(item, index),
-                  ],
-                );
-              }
+              // The `header` and `footer` will be ignored when rendering horizontal list.
+              if (!widget.horizontal) {
+                if (index == 0) {
+                  return Column(
+                    children: [
+                      widget.listHeaderWidget ?? const SizedBox(),
+                      widget.buildItem(item, index),
+                    ],
+                  );
+                }
 
-              if (index == widget.data.length - 1) {
-                return Column(
-                  children: [
-                    widget.buildItem(item, index),
-                    widget.listFooterWidget ?? const SizedBox(),
-                    widget.loading
-                        ? widget.listLoadingWidget ?? defaultLoadingWidget
-                        : const SizedBox(),
-                  ],
-                );
+                if (index == widget.data.length - 1) {
+                  return Column(
+                    children: [
+                      widget.buildItem(item, index),
+                      widget.listFooterWidget ?? const SizedBox(),
+                      widget.loading
+                          ? widget.listLoadingWidget ?? defaultLoadingWidget
+                          : const SizedBox(),
+                    ],
+                  );
+                }
               }
 
               return widget.buildItem(item, widget.data.indexOf(item));
