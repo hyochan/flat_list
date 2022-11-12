@@ -19,6 +19,7 @@ class FlatListEx1 extends HookWidget {
       ),
       body: SafeArea(
         child: FlatList(
+          loading: loading.value,
           onEndReached: () async {
             loading.value = true;
             await Future.delayed(const Duration(seconds: 2));
@@ -34,7 +35,6 @@ class FlatListEx1 extends HookWidget {
               items.value = data;
             }
           },
-          loading: loading.value,
           listHeaderWidget: const Header(),
           listFooterWidget: const Footer(),
           listEmptyWidget: Container(

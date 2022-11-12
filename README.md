@@ -75,10 +75,10 @@ More about the differences in `props` compared to React Native's FlatList are li
 Examples are provided in `/example` folder.
 
 ### One column
-<img src="https://user-images.githubusercontent.com/27461460/201466389-a74baf6a-c12d-4558-a2e8-750884ccfd9f.gif" width="320" />
 
-### Multiple columns
-<img src="https://user-images.githubusercontent.com/27461460/201466392-117ba72a-8506-4708-8c25-d56d2feaf2f1.gif" width="320" />
+| One column             | Multiple Columns            |
+|------------------------|:---------------------------:|
+|<img src="https://user-images.githubusercontent.com/27461460/201466389-a74baf6a-c12d-4558-a2e8-750884ccfd9f.gif" width="280" />|<img src="https://user-images.githubusercontent.com/27461460/201466392-117ba72a-8506-4708-8c25-d56d2feaf2f1.gif" width="280" />|
 
 
 ## TODO
