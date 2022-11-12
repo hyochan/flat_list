@@ -69,10 +69,73 @@ More about the differences in `props` compared to React Native's FlatList are li
 | `numColumns`           | `numColumns`                |          |
 | `onEndReachedDelta`    | `onEndReachedThreshold`     |          |
 
+### Basic setup
+The complete example is available here.
 
-## Demo
+FlatList requires you to provide `data` and `buildItem`:
+* `buildItem` method is identical to [renderItem in React Native](https://reactnative.dev/docs/flatlist#required-renderitem).
+* `data` is a plain list.
 
-Examples are provided in `/example` folder.
+```dart
+FlatList(
+  data: items.value,
+  buildItem: (item, index) {
+    var person = items.value[index];
+
+    return ListItemView(person: person);
+  },
+)
+```
+
+### Adding additional views
+You can provide `header` and `footer` in [FlatList]. When providing `listEmptyWidget`, it will be rendered when the list of data is empty.
+
+```dart
+listHeaderWidget: const Header(), // Provider any header
+listFooterWidget: const Footer(), // Provider any footer
+listEmptyWidget: Container(
+  alignment: Alignment.center,
+  padding: const EdgeInsets.all(12),
+  child: const Text('List is empty!'),
+),
+```
+
+
+## Refresh indicator
+Providing `onRefresh` will add [RefreshIndicator]. Therefore you can refresh the data.
+
+```dart
+onRefresh: () async {
+  await Future.delayed(const Duration(seconds: 2));
+
+  if (context.mounted) {
+    items.value = data;
+  }
+},
+```
+
+## Infinite scroll
+Infinite scrolling is possible using `onEndReached`. You should also provide `loading` to use this feature correctly.
+
+```dart
+loading: loading.value,
+onEndReached: () async {
+  loading.value = true;
+  await Future.delayed(const Duration(seconds: 2));
+  if (context.mounted) {
+    items.value += getMoreData();
+    loading.value = false;
+  }
+},
+```
+
+### GridView
+Just by giving `numColumns` value greater than 1, it will render [GridView].
+
+```dart
+numColums: 3, // Value greater than 1
+),
+```
 
 ### One column
 
@@ -81,9 +144,14 @@ Examples are provided in `/example` folder.
 |<img src="https://user-images.githubusercontent.com/27461460/201466389-a74baf6a-c12d-4558-a2e8-750884ccfd9f.gif" width="280" />|<img src="https://user-images.githubusercontent.com/27461460/201466392-117ba72a-8506-4708-8c25-d56d2feaf2f1.gif" width="280" />|
 
 
+
+## Demo
+
+Examples are provided in `/example` folder.
+
 ## TODO
 
-- [ ] Support optional `horizontal` mode
+- [x] Support optional `horizontal` mode
 - [ ] Separator support in `ListView`
 - [ ] ScrollToIndex support
 - [ ] [Initial number to render](https://reactnative.dev/docs/flatlist#initialnumtorender)
