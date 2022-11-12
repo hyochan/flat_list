@@ -2,7 +2,6 @@ library flat_list;
 
 import 'package:flat_list/utils/measure_size.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 typedef ItemBuilder<T> = Widget Function(T item, int index);
 
