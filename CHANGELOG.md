@@ -1,3 +1,6 @@
+## 0.1.6
+* fix: reorder the hierarchy by checking the item from the last instead of the first.
+
 ## 0.1.5
 * revert: 0.1.4
 

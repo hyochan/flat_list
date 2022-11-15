@@ -201,16 +201,6 @@ class _FlatListState<T> extends State<FlatList> {
 
               // The `header` and `footer` will be ignored when rendering horizontal list.
               if (!widget.horizontal) {
-                if (index == 0) {
-                  return Column(
-                    children: [
-                      widget.listHeaderWidget ?? const SizedBox(),
-                      widget.buildItem(item, index),
-                      widget.itemSeparatorWidget ?? const SizedBox(),
-                    ],
-                  );
-                }
-
                 if (index == widget.data.length - 1) {
                   return Column(
                     children: [
@@ -220,6 +210,16 @@ class _FlatListState<T> extends State<FlatList> {
                       widget.loading
                           ? widget.listLoadingWidget ?? defaultLoadingWidget
                           : const SizedBox(),
+                    ],
+                  );
+                }
+
+                if (index == 0) {
+                  return Column(
+                    children: [
+                      widget.listHeaderWidget ?? const SizedBox(),
+                      widget.buildItem(item, index),
+                      widget.itemSeparatorWidget ?? const SizedBox(),
                     ],
                   );
                 }
