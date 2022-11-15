@@ -1,3 +1,6 @@
+## 0.1.4
+* bugfix: resolve `constraintError` in `buildItem` callback using [Expanded] widget.
+
 ## 0.1.3
 * feat: support `itemSeparatorWidget` for horizontal listview in [commit](https://github.com/hyochan/flat_list/commit/069c8b26bb2132da43043ef1f39c299d0ff3d47c).
 

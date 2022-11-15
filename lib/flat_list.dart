@@ -205,7 +205,7 @@ class _FlatListState<T> extends State<FlatList> {
                   return Column(
                     children: [
                       widget.listHeaderWidget ?? const SizedBox(),
-                      widget.buildItem(item, index),
+                      Expanded(child: widget.buildItem(item, index)),
                       widget.itemSeparatorWidget ?? const SizedBox(),
                     ],
                   );
@@ -214,7 +214,7 @@ class _FlatListState<T> extends State<FlatList> {
                 if (index == widget.data.length - 1) {
                   return Column(
                     children: [
-                      widget.buildItem(item, index),
+                      Expanded(child: widget.buildItem(item, index)),
                       widget.itemSeparatorWidget ?? const SizedBox(),
                       widget.listFooterWidget ?? const SizedBox(),
                       widget.loading
@@ -226,7 +226,7 @@ class _FlatListState<T> extends State<FlatList> {
               }
 
               return Column(children: [
-                widget.buildItem(item, widget.data.indexOf(item)),
+                Expanded(child: widget.buildItem(item, index)),
                 widget.itemSeparatorWidget ?? const SizedBox(),
               ]);
             },
