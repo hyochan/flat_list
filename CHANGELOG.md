@@ -1,3 +1,6 @@
+## 0.1.7
+* fix: show header and footer when the items has length 1.
+
 ## 0.1.6
 * fix: reorder the hierarchy by checking the item from the last instead of the first.
 
