@@ -220,7 +220,6 @@ class _FlatListState<T> extends State<FlatList> {
                     children: [
                       widget.listHeaderWidget ?? const SizedBox(),
                       widget.buildItem(item, index),
-                      widget.listFooterWidget ?? const SizedBox(),
                       widget.itemSeparatorWidget ?? const SizedBox(),
                     ],
                   );
