@@ -204,7 +204,10 @@ class _FlatListState<T> extends State<FlatList> {
                 if (index == widget.data.length - 1) {
                   return Column(
                     children: [
-                      widget.listHeaderWidget ?? const SizedBox(),
+                      /// Render header widget only when the items length is 1
+                      widget.data.length == 1
+                          ? widget.listHeaderWidget ?? const SizedBox()
+                          : const SizedBox(),
                       widget.buildItem(item, index),
                       widget.itemSeparatorWidget ?? const SizedBox(),
                       widget.listFooterWidget ?? const SizedBox(),
