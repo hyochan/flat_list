@@ -1,3 +1,6 @@
+## 0.1.9
+* bugfix: render header only when size of list item is 1.
+
 ## 0.1.8
 * bugfix: do not show footer when rendering first item.
 
