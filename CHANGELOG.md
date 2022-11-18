@@ -1,3 +1,6 @@
+## 0.1.8
+* bugfix: do not show footer when rendering first item.
+
 ## 0.1.7
 * fix: show header and footer when the items has length 1.
 
