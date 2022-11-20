@@ -1,3 +1,7 @@
+## 0.1.10
+* feat: support `inverted` list and grid view by @hyochan in https://github.com/hyochan/flat_list/pull/4.
+* feat: expose [ScrollController] as controller #fcd9cea
+
 ## 0.1.9
 * bugfix: render header only when size of list item is 1.
 
