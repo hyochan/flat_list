@@ -4,35 +4,80 @@ import 'package:flutter/material.dart';
 import 'package:flat_list/utils/measure_size.dart' show MeasureSize;
 import 'package:flutter/foundation.dart' show kReleaseMode;
 
+/// Define generic type T for the list item.
 typedef ItemBuilder<T> = Widget Function(T item, int index);
 
+/// Root of the FlatList widget tree.
 class FlatList<T> extends StatefulWidget {
+  /// The `required` parameter that specifies the data source for the list.
   final List<T> data;
+
+  /// The `required` parameter that specifies the widget builder for the list item.
   final ItemBuilder<T> buildItem;
+
+  /// The header widget to render which is scrollable with list item.
   final Widget? listHeaderWidget;
+
+  /// The footer widget to render which is scrollable with list item.
   final Widget? listFooterWidget;
+
+  /// The widget to render when the list is empty.
   final Widget? listEmptyWidget;
+
+  /// The widget to render when the list is loading.
+  /// The loading will be available at the bottom of the list.
   final Widget? listLoadingWidget;
+
+  /// The list separator that attaches to bottom each list item.
   final Widget? itemSeparatorWidget;
+
+  /// The `loading` state value.
   final bool loading;
+
+  /// The parameter to specify when [onEndReached] should be called.
+  ///
+  /// The default value is 200 and when user reaches 200 pixels from the bottom of the list,
+  /// it will fire `onEndReached` callback.
   final double onEndReachedDelta;
+
+  /// The callback when user reaches the bottom of the list.
   final VoidCallback? onEndReached;
-  final Function(double, double)? onScroll;
+
+  /// The callback when user scrolls.
+  /// It returns [maxScroll] and [currentScroll] as parameters.
+  final Function(double maxScroll, double currentScroll)? onScroll;
+
+  /// When you want to provide full controls over the list,
+  /// you can pass [controller] to the FlatList.
+  ///
+  /// It will have abilities to [animateTo], [jumpTo] and more that exists in [ScrollController].
   final ScrollController? controller;
+
+  /// Invert the scroll direction. This argument is often used when you are building a chat list.
   final bool inverted;
 
-  /// Only works when [horizontal] is true.
+  /// Only works when [horizontal] is `true`.
   final int numColumns;
+
+  /// Make horizontal list view when value is `true`.
   final bool horizontal;
 
   /// RefreshControl props
+  /// The callback when user pulls the list to refresh.
   final RefreshCallback? onRefresh;
+
+  /// The color of the refresh indicator.
   final Color? refreshIndicatorColor;
+
+  /// The color of the refresh indicator's stroke.
   final double refreshIndicatorStrokeWidth;
 
-  /// Below props for grid view
+  // Below props for grid view
+  // The aspect ratio of the list for [GridView].
   final double childAspectRatio;
+  // The main axis spacing between children for [GridView].
   final double mainAxisSpacing;
+  // The cross axis spacing between children for [GridView].
   final double crossAxisSpacing;
 
   const FlatList({
@@ -64,6 +109,7 @@ class FlatList<T> extends StatefulWidget {
   State<FlatList> createState() => _FlatListState<T>();
 }
 
+/// The default loading widget.
 var defaultLoadingWidget = Container(
   padding: const EdgeInsets.all(20),
   child: const Center(
