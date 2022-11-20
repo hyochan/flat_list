@@ -1,3 +1,6 @@
+## 0.1.11
+* docs: add pub badge in the readme
+
 ## 0.1.10
 * feat: support `inverted` list and grid view by @hyochan in https://github.com/hyochan/flat_list/pull/4.
 * feat: expose [ScrollController] as controller #fcd9cea

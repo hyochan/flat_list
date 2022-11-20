@@ -1,5 +1,6 @@
 # [FlatList](https://reactnative.dev/docs/flatlist) for [Flutter](https://flutter.dev)
 
+[![Pub Version](https://img.shields.io/pub/v/flat_list.svg?style=flat-square)](https://pub.dartlang.org/packages/flat_lst)
 [![CI](https://github.com/hyochan/flat_list/actions/workflows/ci.yml/badge.svg)](https://github.com/hyochan/flat_list/actions/workflows/ci.yml)
 
 > [FlatList] widget in Flutter which will be familiar to React Native developers.
@@ -156,6 +157,7 @@ Examples are provided in `/example` folder.
 - [x] Support optional `horizontal` mode
 - [x] Separator support in `ListView`
 - [x] Expose scroll controller: Ability to control similar functionalities listed below.
+
       - [scrollToEnd](https://reactnative.dev/docs/flatlist#scrolltoend)
       - [scrollToIndex](https://reactnative.dev/docs/flatlist#scrolltoindex)
       - [scrollToItem](https://reactnative.dev/docs/flatlist#scrolltoitem)
