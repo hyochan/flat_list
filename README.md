@@ -69,6 +69,7 @@ More about the differences in `props` compared to React Native's FlatList are li
 | `numColumns`           | `numColumns`                |          |
 | `onEndReachedDelta`    | `onEndReachedThreshold`     |          |
 | `controller`           | ``                          |          |
+| `inverted`             | `inverted`                  |          |
 
 ### Basic setup
 The complete example is available here.
@@ -159,8 +160,8 @@ Examples are provided in `/example` folder.
       - [scrollToIndex](https://reactnative.dev/docs/flatlist#scrolltoindex)
       - [scrollToItem](https://reactnative.dev/docs/flatlist#scrolltoitem)
       - [scrollToOffset](https://reactnative.dev/docs/flatlist#scrolltooffset)
+- [x] Support [inverted](https://reactnative.dev/docs/flatlist#inverted)
 - [ ] Enhance `onEndReachedDelta` with similar to `onEndReachedThreshold`
-- [ ] Support [inverted](https://reactnative.dev/docs/flatlist#inverted)
 - [ ] Test coverage
 
 ## Additional information
