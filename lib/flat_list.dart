@@ -19,6 +19,7 @@ class FlatList<T> extends StatefulWidget {
   final VoidCallback? onEndReached;
   final Function(double, double)? onScroll;
   final ScrollController? controller;
+  final bool inverted;
 
   /// Only works when [horizontal] is true.
   final int numColumns;
@@ -56,6 +57,7 @@ class FlatList<T> extends StatefulWidget {
     this.crossAxisSpacing = 10,
     this.horizontal = false,
     this.controller,
+    this.inverted = false,
   });
 
   @override
@@ -118,6 +120,7 @@ class _FlatListState<T> extends State<FlatList> {
   Widget _buildList(BuildContext context) {
     if (widget.data.isEmpty) {
       return ListView(
+        reverse: false,
         scrollDirection: widget.horizontal ? Axis.horizontal : Axis.vertical,
         children: [
           widget.listHeaderWidget ?? const SizedBox(),
@@ -150,7 +153,9 @@ class _FlatListState<T> extends State<FlatList> {
         );
       }
 
+      /// Render [GridView]
       return CustomScrollView(
+        reverse: false,
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: <Widget>[
@@ -186,6 +191,7 @@ class _FlatListState<T> extends State<FlatList> {
 
     /// Render [ListView]
     return CustomScrollView(
+      reverse: false,
       scrollDirection: widget.horizontal ? Axis.horizontal : Axis.vertical,
       physics: const BouncingScrollPhysics(),
       controller: _scrollController,
@@ -237,6 +243,137 @@ class _FlatListState<T> extends State<FlatList> {
     );
   }
 
+  /// When [inverted] is true, the list will be rendered from bottom to top.
+  ///
+  /// It would be better to separate the build functions
+  /// before we actually abstract all functionalities to make code stable and clear.
+  Widget _buildInvertedList(BuildContext context) {
+    if (widget.data.isEmpty) {
+      return ListView(
+        reverse: true,
+        scrollDirection: widget.horizontal ? Axis.horizontal : Axis.vertical,
+        children: [
+          widget.listHeaderWidget ?? const SizedBox(),
+          widget.listEmptyWidget ?? const SizedBox(),
+          widget.listFooterWidget ?? const SizedBox(),
+        ],
+      );
+    }
+
+    /// Render [GridView]
+    if (widget.numColumns > 1) {
+      if (!kReleaseMode) {
+        if (widget.horizontal) {
+          throw Exception(
+              '[numColumns] is not supported with horizontal list.');
+        }
+
+        if (widget.itemSeparatorWidget != null) {
+          throw Exception(
+              '[itemSeparatorWidget] only works with [numColumn=1] list.');
+        }
+      }
+
+      if (_height == 0.0) {
+        return MeasureSize(
+          onChange: (size) {
+            setState(() => _height = size.height + 20);
+          },
+          child: widget.buildItem(widget.data[0], 0),
+        );
+      }
+
+      /// Render reversed [GridView]
+      return CustomScrollView(
+        reverse: true,
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: <Widget>[
+          widget.listHeaderWidget != null
+              ? SliverToBoxAdapter(child: widget.listHeaderWidget!)
+              : const SliverToBoxAdapter(child: SizedBox()),
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: widget.numColumns,
+              mainAxisExtent: _height,
+              childAspectRatio: widget.childAspectRatio,
+              mainAxisSpacing: widget.mainAxisSpacing,
+              crossAxisSpacing: widget.crossAxisSpacing,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                var item = widget.data[index];
+                return widget.buildItem(item, widget.data.indexOf(item));
+              },
+              childCount: widget.data.length,
+            ),
+          ),
+          widget.listFooterWidget != null
+              ? SliverToBoxAdapter(child: widget.listFooterWidget!)
+              : const SliverToBoxAdapter(child: SizedBox()),
+          widget.loading
+              ? SliverToBoxAdapter(
+                  child: widget.listLoadingWidget ?? defaultLoadingWidget)
+              : const SliverToBoxAdapter(child: SizedBox()),
+        ],
+      );
+    }
+
+    /// Render reversed [ListView]
+    return CustomScrollView(
+      reverse: true,
+      scrollDirection: widget.horizontal ? Axis.horizontal : Axis.vertical,
+      physics: const BouncingScrollPhysics(),
+      controller: _scrollController,
+      slivers: [
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              var item = widget.data[index];
+
+              // The `header` and `footer` will be ignored when rendering horizontal list.
+              if (!widget.horizontal) {
+                if (index == widget.data.length - 1) {
+                  return Column(
+                    children: [
+                      widget.loading
+                          ? widget.listLoadingWidget ?? defaultLoadingWidget
+                          : const SizedBox(),
+                      widget.listFooterWidget ?? const SizedBox(),
+                      widget.itemSeparatorWidget ?? const SizedBox(),
+                      widget.buildItem(item, index),
+
+                      /// Render header widget only when the items length is 1
+                      widget.data.length == 1
+                          ? widget.listHeaderWidget ?? const SizedBox()
+                          : const SizedBox(),
+                    ],
+                  );
+                }
+
+                if (index == 0) {
+                  return Column(
+                    children: [
+                      widget.itemSeparatorWidget ?? const SizedBox(),
+                      widget.buildItem(item, index),
+                      widget.listHeaderWidget ?? const SizedBox(),
+                    ],
+                  );
+                }
+              }
+
+              return Column(children: [
+                widget.itemSeparatorWidget ?? const SizedBox(),
+                widget.buildItem(item, index),
+              ]);
+            },
+            childCount: widget.data.length,
+          ),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.onRefresh != null) {
@@ -244,9 +381,11 @@ class _FlatListState<T> extends State<FlatList> {
         onRefresh: widget.onRefresh!,
         color: widget.refreshIndicatorColor,
         strokeWidth: widget.refreshIndicatorStrokeWidth,
-        child: _buildList(context),
+        child: !widget.inverted
+            ? _buildList(context)
+            : _buildInvertedList(context),
       );
     }
-    return _buildList(context);
+    return !widget.inverted ? _buildList(context) : _buildInvertedList(context);
   }
 }

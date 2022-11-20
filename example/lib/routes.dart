@@ -1,6 +1,8 @@
 import 'package:flat_list_example/screens/flat_list_ex1.dart';
 import 'package:flat_list_example/screens/flat_list_ex2.dart';
 import 'package:flat_list_example/screens/flat_list_ex3.dart';
+import 'package:flat_list_example/screens/flat_list_ex4.dart';
+import 'package:flat_list_example/screens/flat_list_ex5.dart';
 import 'package:flat_list_example/screens/home.dart';
 import 'package:flutter/foundation.dart';
 
@@ -9,6 +11,8 @@ enum AppRoute {
   flatListEx1,
   flatListEx2,
   flatListEx3,
+  flatListEx4,
+  flatListEx5,
 }
 
 extension RouteName on AppRoute {
@@ -44,4 +48,6 @@ final routes = {
   AppRoute.flatListEx1.fullPath: (context) => const FlatListEx1(),
   AppRoute.flatListEx2.fullPath: (context) => const FlatListEx2(),
   AppRoute.flatListEx3.fullPath: (context) => const FlatListEx3(),
+  AppRoute.flatListEx4.fullPath: (context) => const FlatListEx4(),
+  AppRoute.flatListEx5.fullPath: (context) => const FlatListEx5(),
 };
