@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class FlatListEx2 extends HookWidget {
-  static const name = '/flat-list-ex2';
   const FlatListEx2({super.key});
 
   @override
