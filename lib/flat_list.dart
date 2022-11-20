@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart' show kReleaseMode;
 typedef ItemBuilder<T> = Widget Function(T item, int index);
 
 class FlatList<T> extends StatefulWidget {
-  final Key? scrollViewKey;
   final List<T> data;
   final ItemBuilder<T> buildItem;
   final Widget? listHeaderWidget;
@@ -19,26 +18,24 @@ class FlatList<T> extends StatefulWidget {
   final double onEndReachedDelta;
   final VoidCallback? onEndReached;
   final Function(double, double)? onScroll;
+  final ScrollController? controller;
 
   /// Only works when [horizontal] is true.
   final int numColumns;
   final bool horizontal;
 
   /// RefreshControl props
-  final Key? refreshIndicatorKey;
   final RefreshCallback? onRefresh;
   final Color? refreshIndicatorColor;
   final double refreshIndicatorStrokeWidth;
 
   /// Below props for grid view
-  final Key? gridViewKey;
   final double childAspectRatio;
   final double mainAxisSpacing;
   final double crossAxisSpacing;
 
   const FlatList({
     super.key,
-    this.scrollViewKey,
     required this.data,
     required this.buildItem,
     this.listHeaderWidget,
@@ -51,15 +48,14 @@ class FlatList<T> extends StatefulWidget {
     this.onEndReachedDelta = 200,
     this.onEndReached,
     this.onScroll,
-    this.refreshIndicatorKey,
     this.onRefresh,
     this.refreshIndicatorColor,
     this.refreshIndicatorStrokeWidth = 2.0,
-    this.gridViewKey,
     this.childAspectRatio = 1,
     this.mainAxisSpacing = 10,
     this.crossAxisSpacing = 10,
     this.horizontal = false,
+    this.controller,
   });
 
   @override
@@ -76,11 +72,15 @@ var defaultLoadingWidget = Container(
 class _FlatListState<T> extends State<FlatList> {
   var _height = 0.0;
   var _currentSize = 0;
-  final _scrollController = ScrollController();
+  var _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    if (widget.controller != null) {
+      _scrollController = widget.controller!;
+    }
+
     _scrollController.addListener(_onScroll);
   }
 
@@ -119,7 +119,6 @@ class _FlatListState<T> extends State<FlatList> {
     if (widget.data.isEmpty) {
       return ListView(
         scrollDirection: widget.horizontal ? Axis.horizontal : Axis.vertical,
-        key: widget.scrollViewKey,
         children: [
           widget.listHeaderWidget ?? const SizedBox(),
           widget.listEmptyWidget ?? const SizedBox(),
@@ -152,7 +151,6 @@ class _FlatListState<T> extends State<FlatList> {
       }
 
       return CustomScrollView(
-        key: widget.scrollViewKey,
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: <Widget>[
@@ -160,7 +158,6 @@ class _FlatListState<T> extends State<FlatList> {
               ? SliverToBoxAdapter(child: widget.listHeaderWidget!)
               : const SliverToBoxAdapter(child: SizedBox()),
           SliverGrid(
-            key: widget.gridViewKey,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: widget.numColumns,
               mainAxisExtent: _height,
@@ -189,7 +186,6 @@ class _FlatListState<T> extends State<FlatList> {
 
     /// Render [ListView]
     return CustomScrollView(
-      key: widget.scrollViewKey,
       scrollDirection: widget.horizontal ? Axis.horizontal : Axis.vertical,
       physics: const BouncingScrollPhysics(),
       controller: _scrollController,
@@ -248,7 +244,6 @@ class _FlatListState<T> extends State<FlatList> {
         onRefresh: widget.onRefresh!,
         color: widget.refreshIndicatorColor,
         strokeWidth: widget.refreshIndicatorStrokeWidth,
-        key: widget.refreshIndicatorKey,
         child: _buildList(context),
       );
     }

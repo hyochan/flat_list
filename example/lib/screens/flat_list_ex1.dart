@@ -13,6 +13,28 @@ class FlatListEx1 extends HookWidget {
     var items = useState(data);
     var loading = useState(false);
 
+    /// Note: You can either provide controller by yourself
+    /// and gain the full control of the list or the grid view.
+    var scrollController = useScrollController();
+
+    // ignore: unused_element
+    void onScroll() {
+      double maxScroll = scrollController.position.maxScrollExtent;
+      double currentScroll = scrollController.position.pixels;
+
+      // ignore: avoid_print
+      print('maxScroll: $maxScroll');
+      // ignore: avoid_print
+      print('currentScroll: $currentScroll');
+    }
+
+    useEffect(() {
+      // Remove comment to gain full control of the list or the grid view.
+      // scrollController.addListener(onScroll);
+
+      return null;
+    }, []);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Simple Example'),
@@ -28,6 +50,7 @@ class FlatListEx1 extends HookWidget {
               loading.value = false;
             }
           },
+          controller: scrollController,
           onRefresh: () async {
             await Future.delayed(const Duration(seconds: 2));
 

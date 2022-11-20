@@ -68,6 +68,7 @@ More about the differences in `props` compared to React Native's FlatList are li
 | `loading`              | `loading`                   |          |
 | `numColumns`           | `numColumns`                |          |
 | `onEndReachedDelta`    | `onEndReachedThreshold`     |          |
+| `controller`           | ``                          |          |
 
 ### Basic setup
 The complete example is available here.
@@ -153,16 +154,13 @@ Examples are provided in `/example` folder.
 
 - [x] Support optional `horizontal` mode
 - [x] Separator support in `ListView`
-- [ ] ScrollToIndex support
-- [ ] [Initial number to render](https://reactnative.dev/docs/flatlist#initialnumtorender)
-- [ ] [Initial scroll to index](https://reactnative.dev/docs/flatlist#initialscrollindex)
+- [x] Expose scroll controller: Ability to control similar functionalities listed below.
+      - [scrollToEnd](https://reactnative.dev/docs/flatlist#scrolltoend)
+      - [scrollToIndex](https://reactnative.dev/docs/flatlist#scrolltoindex)
+      - [scrollToItem](https://reactnative.dev/docs/flatlist#scrolltoitem)
+      - [scrollToOffset](https://reactnative.dev/docs/flatlist#scrolltooffset)
 - [ ] Enhance `onEndReachedDelta` with similar to `onEndReachedThreshold`
 - [ ] Support [inverted](https://reactnative.dev/docs/flatlist#inverted)
-- [ ] Implement methods
-  - [scrollToEnd](https://reactnative.dev/docs/flatlist#scrolltoend)
-  - [scrollToIndex](https://reactnative.dev/docs/flatlist#scrolltoindex)
-  - [scrollToItem](https://reactnative.dev/docs/flatlist#scrolltoitem)
-  - [scrollToOffset](https://reactnative.dev/docs/flatlist#scrolltooffset)
 - [ ] Test coverage
 
 ## Additional information
