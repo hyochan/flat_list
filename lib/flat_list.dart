@@ -117,7 +117,7 @@ var defaultLoadingWidget = Container(
   ),
 );
 
-class _FlatListState<T> extends State<FlatList> {
+class _FlatListState<T> extends State<FlatList<T>> {
   var _height = 0.0;
   var _currentSize = 0;
   var _scrollController = ScrollController();
