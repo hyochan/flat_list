@@ -1,3 +1,6 @@
+## 0.1.12
+* enh: add valued keys to list items.
+
 ## 0.1.11
 * bugfix: generic typing error on [buildItem]
 

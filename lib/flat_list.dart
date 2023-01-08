@@ -251,12 +251,13 @@ class _FlatListState<T> extends State<FlatList<T>> {
               if (!widget.horizontal) {
                 if (index == widget.data.length - 1) {
                   return Column(
+                    key: ValueKey(item),
                     children: [
                       /// Render header widget only when the items length is 1
                       widget.data.length == 1
                           ? widget.listHeaderWidget ?? const SizedBox()
                           : const SizedBox(),
-                      widget.buildItem(item, index),
+
                       widget.itemSeparatorWidget ?? const SizedBox(),
                       widget.listFooterWidget ?? const SizedBox(),
                       widget.loading
@@ -268,6 +269,7 @@ class _FlatListState<T> extends State<FlatList<T>> {
 
                 if (index == 0) {
                   return Column(
+                    key: ValueKey(item),
                     children: [
                       widget.listHeaderWidget ?? const SizedBox(),
                       widget.buildItem(item, index),
@@ -277,10 +279,13 @@ class _FlatListState<T> extends State<FlatList<T>> {
                 }
               }
 
-              return Column(children: [
-                widget.buildItem(item, index),
-                widget.itemSeparatorWidget ?? const SizedBox(),
-              ]);
+              return Column(
+                key: ValueKey(item),
+                children: [
+                  widget.buildItem(item, index),
+                  widget.itemSeparatorWidget ?? const SizedBox(),
+                ],
+              );
             },
             childCount: widget.data.length,
           ),
@@ -349,7 +354,10 @@ class _FlatListState<T> extends State<FlatList<T>> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 var item = widget.data[index];
-                return widget.buildItem(item, widget.data.indexOf(item));
+                return KeyedSubtree(
+                  key: ValueKey(item),
+                  child: widget.buildItem(item, widget.data.indexOf(item)),
+                );
               },
               childCount: widget.data.length,
             ),
@@ -381,6 +389,7 @@ class _FlatListState<T> extends State<FlatList<T>> {
               if (!widget.horizontal) {
                 if (index == widget.data.length - 1) {
                   return Column(
+                    key: ValueKey(item),
                     children: [
                       widget.loading
                           ? widget.listLoadingWidget ?? defaultLoadingWidget
@@ -399,6 +408,7 @@ class _FlatListState<T> extends State<FlatList<T>> {
 
                 if (index == 0) {
                   return Column(
+                    key: ValueKey(item),
                     children: [
                       widget.itemSeparatorWidget ?? const SizedBox(),
                       widget.buildItem(item, index),
@@ -408,10 +418,13 @@ class _FlatListState<T> extends State<FlatList<T>> {
                 }
               }
 
-              return Column(children: [
-                widget.itemSeparatorWidget ?? const SizedBox(),
-                widget.buildItem(item, index),
-              ]);
+              return Column(
+                key: ValueKey(item),
+                children: [
+                  widget.itemSeparatorWidget ?? const SizedBox(),
+                  widget.buildItem(item, index),
+                ],
+              );
             },
             childCount: widget.data.length,
           ),
