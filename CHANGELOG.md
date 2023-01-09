@@ -1,3 +1,6 @@
+## 0.1.13
+* bugfix: able to render item with footer.
+
 ## 0.1.12
 * enh: add valued keys to list items.
 

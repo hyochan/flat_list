@@ -258,6 +258,7 @@ class _FlatListState<T> extends State<FlatList<T>> {
                           ? widget.listHeaderWidget ?? const SizedBox()
                           : const SizedBox(),
 
+                      widget.buildItem(item, index),
                       widget.itemSeparatorWidget ?? const SizedBox(),
                       widget.listFooterWidget ?? const SizedBox(),
                       widget.loading
