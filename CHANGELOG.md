@@ -1,3 +1,6 @@
+## 0.1.14
+* fix: scrolls when list smaller than viewport by @brysem in https://github.com/hyochan/flat_list/pull/6
+
 ## 0.1.13
 * bugfix: able to render item with footer.
 
