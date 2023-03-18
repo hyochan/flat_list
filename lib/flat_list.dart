@@ -130,6 +130,12 @@ class _FlatListState<T> extends State<FlatList<T>> {
     }
 
     _scrollController.addListener(_onScroll);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_scrollController.positions.isNotEmpty && _hasScrolledPast()) {
+        _onEndReachedCallback();
+      }
+    });
   }
 
   void _onEndReachedCallback() {
@@ -139,22 +145,33 @@ class _FlatListState<T> extends State<FlatList<T>> {
   }
 
   void _onScroll() {
-    double maxScroll = _scrollController.position.maxScrollExtent;
-    double currentScroll = _scrollController.position.pixels;
-    double delta = widget.onEndReachedDelta;
-    if (maxScroll - currentScroll <= delta &&
-        _currentSize < widget.data.length) {
+    if (_hasScrolledPast()) {
       setState(() => _currentSize = widget.data.length);
       _onEndReachedCallback();
     }
 
-    if (_scrollController.position.atEdge) {
-      if (_scrollController.position.pixels != 0) {
-        _onEndReachedCallback();
-      }
+    if (_isAtEdge()) {
+      _onEndReachedCallback();
     }
 
+    double maxScroll = _scrollController.position.maxScrollExtent;
+    double currentScroll = _scrollController.position.pixels;
+
     widget.onScroll?.call(maxScroll, currentScroll);
+  }
+
+  bool _hasScrolledPast() {
+    double maxScroll = _scrollController.position.maxScrollExtent;
+    double currentScroll = _scrollController.position.pixels;
+    double delta = widget.onEndReachedDelta;
+
+    return maxScroll - currentScroll <= delta &&
+        _currentSize < widget.data.length;
+  }
+
+  bool _isAtEdge() {
+    return _scrollController.position.atEdge &&
+        _scrollController.position.pixels != 0;
   }
 
   @override
@@ -239,7 +256,7 @@ class _FlatListState<T> extends State<FlatList<T>> {
     return CustomScrollView(
       reverse: false,
       scrollDirection: widget.horizontal ? Axis.horizontal : Axis.vertical,
-      physics: const BouncingScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       controller: _scrollController,
       slivers: [
         SliverList(
