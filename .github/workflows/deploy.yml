@@ -1,8 +1,9 @@
 name: Deploy
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+    - '[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
   publish:
@@ -11,10 +12,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: dart-lang/setup-dart@v1
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'beta'
+          architecture: x64
+
+      - run: flutter --version
+
       - name: Install dependencies
-        run: dart pub get
-      # Here you can insert custom steps you need
-      # - run: dart tool/generate-code.dart
-      - name: Publish
-        run: dart pub publish --force
+        run: flutter pub get
+        working-directory: ${{ inputs.working-directory }}
+      - name: Publish - dry run
+        run: flutter pub publish --dry-run
+        working-directory: ${{ inputs.working-directory }}
+      - name: Publish to pub.dev
+        run: flutter pub publish -f
+        working-directory: ${{ inputs.working-directory }}
