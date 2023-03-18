@@ -4,16 +4,17 @@ on:
   release:
     types: [created]
 
-
 jobs:
-  build:
-    # if: ${{ github.repository == 'hyochan/flat_list' }}
+  publish:
+    permissions:
+      id-token: write # This is required for authentication using OIDC
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - uses: k-paxian/dart-package-publisher@master
-        with:
-          credentialJson: ${{ secrets.CREDENTIAL_JSON }}
-          flutter: true
-          skipTests: true
+      - uses: dart-lang/setup-dart@v1
+      - name: Install dependencies
+        run: dart pub get
+      # Here you can insert custom steps you need
+      # - run: dart tool/generate-code.dart
+      - name: Publish
+        run: dart pub publish --force
