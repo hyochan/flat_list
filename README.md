@@ -137,7 +137,6 @@ Just by giving `numColumns` value greater than 1, it will render [GridView].
 
 ```dart
 numColums: 3, // Value greater than 1
-),
 ```
 
 ### One column
